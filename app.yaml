@@ -4,9 +4,8 @@ runtime: python
 api_version: 1
 
 handlers:
-- url: /tasks/send
+- url: /tasks/.*
   script: twitter-username-availability.py
   login: admin
-- url: /tasks/check
+- url: /*
   script: twitter-username-availability.py
-  login: admin

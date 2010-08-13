@@ -5,7 +5,7 @@ api_version: 1
 
 handlers:
 - url: /tasks/.*
-  script: twitter-username-availability.py
+  script: usernamecheck.py
   login: admin
 - url: /*
-  script: twitter-username-availability.py
+  script: usernamecheck.py

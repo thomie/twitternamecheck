@@ -2,7 +2,6 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import mail
 import httplib
-import json
 
 
 class CheckAvailability(webapp.RequestHandler):
@@ -20,14 +19,14 @@ class CheckAvailability(webapp.RequestHandler):
     def check_availability(self):
         conn = httplib.HTTPConnection('twitter.com')
         conn.request('GET', '/users/username_available?username=thomie')
-        body = json.loads(conn.getresponse().read())['msg']
-        return body
+        data = conn.getresponse().read()
+        return data.split(',')[0].split(':')[1].strip('"')
 
     def send_mail(self, body):
         message = mail.EmailMessage()
         message.sender = 'thomasmiedema@gmail.com'
         message.to = 'thomasmiedema@gmail.com'
-        message.subject = 'twitter.com/thomie available'
+        message.subject = body
         message.body = body
         message.send()
 

@@ -1,0 +1,12 @@
+application: twitter-username-availability
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /tasks/send
+  script: twitter-username-availability.py
+  login: admin
+- url: /tasks/check
+  script: twitter-username-availability.py
+  login: admin

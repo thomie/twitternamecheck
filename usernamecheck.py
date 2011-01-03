@@ -8,8 +8,8 @@ class CheckAvailability(webapp.RequestHandler):
     def get(self, check_or_send):
         availability = self.check_availability()
         body = availability
-        if(availability != 'Username has already been taken' or
-                check_or_send == 'send'):
+        if(availability != 'That username has been taken. Please choose another.' or
+            check_or_send == 'send'):
             self.send_mail(availability)
             body = availability  + '\nMessage send'
 

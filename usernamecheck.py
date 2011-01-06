@@ -2,25 +2,25 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import mail
 import httplib
+from simplejson import decoder
 
 
 class CheckAvailability(webapp.RequestHandler):
     def get(self, check_or_send):
-        availability = self.check_availability()
-        body = availability
-        if(availability != 'That username has been taken. Please choose another.' or
-            check_or_send == 'send'):
-            self.send_mail(availability)
-            body = availability  + '\nMessage send'
+        availability, message = self.check_availability()
+        if(availability or check_or_send == 'send'):
+            self.send_mail(message)
+            message += '\nMessage send'
 
         self.response.headers['Content-Type'] = 'text/plain'
-        self.response.out.write(body)
+        self.response.out.write(message)
 
     def check_availability(self):
         conn = httplib.HTTPConnection('twitter.com')
         conn.request('GET', '/users/username_available?username=thomie')
         data = conn.getresponse().read()
-        return data.split(',')[0].split(':')[1].strip('"')
+        response = decoder.JSONDecoder().decode(data)
+        return response['valid'], response['msg']
 
     def send_mail(self, body):
         message = mail.EmailMessage()
